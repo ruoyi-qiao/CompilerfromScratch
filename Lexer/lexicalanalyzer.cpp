@@ -1,5 +1,11 @@
 #include <iostream>
 #include <functional>
+#include <fstream>
+#include <iomanip>
+
+#define dbg(x...) do { std::cerr << #x << "  -> "; err(x); } while (0);
+void err() { std::cerr << std::endl; }
+template<class T, class... Ts> void err(const T& arg, const Ts&... args) {std::cerr << arg << " "; err(args...); }
 
 using Predicate = std::function<bool(int)>;
 
@@ -213,7 +219,9 @@ public:
             }
             visited[node->getID()] = true;
             nodes.push_back(node);
-            auto [next1, next2] = node->getNext();
+            // auto [next1, next2] = node->getNext();
+            NFANode* next1, *next2;
+            std::tie(next1, next2) = node->getNext();
             int id1 = next1 == nullptr ? -1 : next1->getID();
             int id2 = next2 == nullptr ? -1 : next2->getID();
 
@@ -254,7 +262,9 @@ public:
             }
             printed[node->getID()] = true;
 
-            auto [next1, next2] = node->getNext();
+            // auto [next1, next2] = node->getNext();
+            NFANode* next1, *next2;
+            std::tie(next1, next2) = node->getNext();
             int id1 = next1 == nullptr ? -1 : next1->getID();
             int id2 = next2 == nullptr ? -1 : next2->getID();
 
@@ -758,9 +768,11 @@ private:
 };
 
 #include <unordered_set>
+#include <unordered_map>
 
 using NFANodeSet = std::unordered_set<const NFANode*>;
-const int INVALID = std::numeric_limits<int>::min();
+// const int INVALID = std::numeric_limits<int>::min();
+const int INVALID = INT32_MIN;
 
 struct NFANodeSetHash {
     std::size_t operator()(const NFANodeSet& nodeSet) const {
@@ -792,14 +804,14 @@ private:
     static NFANodeSet epsilonClosure(const NFANodeSet& nodes);
     static NFANodeSet next(const NFANodeSet& begin, int b);
     
-    // 最小化 dfa  
-    
-    // void minimize(); 
-    // void splitGroups();
-    // void initGroup();
-    // void split(std::set<int>& curGroup);
-    // void createGroup(std::set<int>& states);
-    // void outputData();
+    using transitionTable = std::vector<std::vector<int>>;
+    // 最小化 dfa 
+    transitionTable minimizeTransitionTable; 
+    std::vector<std::string> minimizeTokens;
+
+    void dfaMinimize();
+    std::set<std::set<int>> split(std::set<int>& s);
+    void outputData();
 
 public:
     int runDFA(const std::string& input, std::string& token);
@@ -825,10 +837,9 @@ DFAConverter::DFAConverter(RegexParser* parser) {
 
 void DFAConverter::convert(NFANode* startNode) {
     transfer(startNode);
-    // minimize();
-    // outputData();
+    // dfaMinimize();
 }
-// implement epilson closure
+
 NFANodeSet DFAConverter::epsilonClosure(const NFANodeSet& nodes) {
     NFANodeSet result;
     std::queue<const NFANode*> q;
@@ -840,7 +851,9 @@ NFANodeSet DFAConverter::epsilonClosure(const NFANodeSet& nodes) {
         const NFANode* node = q.front();
         q.pop();
         result.insert(node);
-        auto [next1, next2] = node->getNext();
+        // auto [next1, next2] = node->getNext();
+        NFANode* next1, *next2;
+        std::tie(next1, next2) = node->getNext();
         if (node->getEdgeType() == NFANode::SINGLE_EPSILON) {
             if (result.find(next1) == result.end()) {
                 q.push(next1);
@@ -883,10 +896,10 @@ void DFAConverter::transfer(NFANode* startNode) {
 }
 
 int DFAConverter::addDFAState(NFANodeSet& g, std::vector<int>& unchecked) {
+    
     if (nfa2dfaMap.find(g) != nfa2dfaMap.end()) {
         return nfa2dfaMap[g];
     }
-
 
     int state = statesCount++;
     nfa2dfaMap[g] = state;
@@ -922,7 +935,9 @@ int DFAConverter::addDFAState(NFANodeSet& g, std::vector<int>& unchecked) {
 NFANodeSet DFAConverter::next(const NFANodeSet& begin, int b) {
     NFANodeSet result;
     for (const NFANode* node : begin) {
-        auto [next1, next2] = node->getNext();
+        // auto [next1, next2] = node->getNext();
+        NFANode* next1, *next2;
+        std::tie(next1, next2) = node->getNext();
         if (node->getEdgeType() == NFANode::CHAR && node->getPredicate()(b)) {
             result.insert(next1);
         }
@@ -942,6 +957,122 @@ int DFAConverter::runDFA(const std::string& input, std::string &token) {
     }
     token = tokens[state];
     return state;
+}
+
+void DFAConverter::dfaMinimize() {
+    std::set<std::set<int>> newDfaStates, oldDfaStates;
+    std::set<int> acceptedStates, unacceptedStates;
+    for (int i = 0; i < statesCount; i++) {
+        if (accepted[i]) {
+            acceptedStates.insert(i);
+        } else {
+            unacceptedStates.insert(i);
+        }
+    }
+    newDfaStates.insert(acceptedStates);
+    newDfaStates.insert(unacceptedStates);
+    while (newDfaStates != oldDfaStates) {
+        oldDfaStates = newDfaStates;
+        newDfaStates.clear();
+        for (auto s : oldDfaStates) {
+            std::set<std::set<int>> s1 = split(s);
+            for (auto s2 : s1) {
+                newDfaStates.insert(s2);
+            }
+        }
+    }
+    // 映射最小化 dfa 的状态
+    std::unordered_map<int, int> minDfaMap;
+    std::vector<int> minDfa2nfaMap;
+    int minStatesCount = 0;
+    for (auto s : newDfaStates) {
+        // 输出检查
+        // for (int state : s) {
+        //     std::cout << "(" << state << ", " << tokens[state] << ") ";
+        // } std::cout << std::endl;
+
+        for (int state : s) {
+            minDfaMap[state] = minStatesCount;
+        }
+        minDfa2nfaMap.push_back(*s.begin());
+        minStatesCount++;
+    }
+    // 构建最小化 dfa 的转移表
+    minimizeTransitionTable.resize(minStatesCount);
+    for (int i = 0; i < minStatesCount; i++) {
+        minimizeTransitionTable[i].resize(128 + 1, -1);
+    }
+    for (auto s : newDfaStates) {
+        int state = minDfaMap[*s.begin()];
+        for (int b = 0; b <= 128; b++) {
+            int nextState = goTo[*s.begin()][b];
+            if (nextState != -1) {
+                nextState = minDfaMap[nextState];
+            }
+            minimizeTransitionTable[state][b] = nextState;
+        }
+    }
+    // minimizeTokens
+    minimizeTokens.resize(minStatesCount);
+    for (int i = 0; i < minStatesCount; i++) {
+        minimizeTokens[i] = tokens[minDfa2nfaMap[i]];
+    }
+    // debug
+    // std::cout << "minimizeTransitionTable:" << std::endl;
+
+    // std::cout << std::setw(4) << " ";
+    // for (int i = 0; i <= 128; i++) {
+    //     std::cout << std::setw(4) << i;
+    // } std::cout << std::endl;
+
+    // for (int i = 0; i < minStatesCount; i++) {
+    //     std::cout << std::setw(4) << i;
+    //     for (int j = 0; j <= 128; j++) {
+    //         std::cout << std::setw(4) << minimizeTransitionTable[i][j];
+    //     } std::cout << std::endl;
+    // }
+
+    // std::cout << "minimizeTokens:" << std::endl;
+    // for (int i = 0; i < minStatesCount; i++) {
+    //     std::cout << std::setw(4) << i << " " << minimizeTokens[i] << std::endl;
+    // }
+}
+#include <assert.h>
+std::set<std::set<int>> DFAConverter::split(std::set<int>& s) {
+
+    std::set<std::set<int>> result;
+    for (int b = 0; b <= 128; b++) {
+        // 如果 b 将 s 分割成两个集合，则返回 {s1, s2}
+        std::set<int> s1, s2;
+        int s1ID = INVALID;
+        std::string tkn; 
+        for (int state : s) {
+            int nextState = goTo[state][b];
+            if (s1ID == INVALID) {
+                s1ID = nextState;
+                tkn = tokens[state];
+                s1.insert(state);
+            } else {
+                if (nextState == s1ID) {
+                    if (tokens[state] == tkn) {
+                        s1.insert(state);
+                    } else {
+                        s2.insert(state);
+                    }
+                } else {
+                    s2.insert(state);
+                }
+            }
+        }
+        if (!s1.empty() && !s2.empty()) {
+            result.insert(s1);
+            result.insert(s2);
+            return result;
+        }
+    }
+
+    result.insert(s);
+    return result;
 }
 
 class LexerError {
@@ -967,7 +1098,9 @@ public:
             std::cerr << "No previous position to retrace" << std::endl;
             return -1;
         }
-        auto [prevLine, prevColumn] = prevPositions.back();
+        // auto [prevLine, prevColumn] = prevPositions.back();
+        int prevLine, prevColumn;
+        std::tie(prevLine, prevColumn) = prevPositions.back();
         prevPositions.pop_back();
         return 0;
     }
@@ -1007,17 +1140,12 @@ private:
     }
 };
 
-#include <fstream>
-#include <iomanip>
 
 struct Token {
     std::string value;
     std::string type;
 };
 
-#define dbg(x...) do { std::cerr << #x << "  -> "; err(x); } while (0);
-void err() { std::cerr << std::endl; }
-template<class T, class... Ts> void err(const T& arg, const Ts&... args) {std::cerr << arg << " "; err(args...); }
 
 using DFATable = std::vector<std::vector<int>>;
 
@@ -1175,11 +1303,14 @@ void Analysis()
         {"\"", "78"},       {"\\/\\*@.*\\*\\/", "79"},              {"\\/\\/@l*", "79"}, 
         {"@d+(L|l)?|0(x|X)@h+", "80"},          {"@d+.@d+((e|E)(+|-)?@d+)?", "80"}, 
         {"(@a|_)@w+", "81"},                    {"\\%(-)?(.@d+)?(d|ld|lld|f|lf|c|s|p|x)","81"},
-        {"@a@d?","81"},     {"#", "82"},        {"'", "83"},        {"@s+", "space/ctrl"}
+        {"@a@d?","81"},     {"#", "82"},        {"'", "83"},        {"@s+", "space/ctrl"},
+        {"\\\\(n|t|r)", "space/ctrl"}
     };
 
     RegexParser* parser = new RegexParser();
-    for (auto [regex, type] : rules) {
+    for (auto rule : rules) {
+        std::string regex = rule.regex;
+        std::string type = rule.type;
         parser->registerRegex(regex, type);
     }
     DFAConverter* converter = new DFAConverter(parser);
