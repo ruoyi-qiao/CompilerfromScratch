@@ -1,6 +1,8 @@
 #include <cassert>
 #include <iostream>
-#include "DFAConverter.hpp"
+#include <unordered_set>
+// #include "DFAConverter.hpp"
+#include "Lexer.hpp"
 
 int main () {
     if (0) {
@@ -108,9 +110,16 @@ int main () {
         // test RegexParser
         RegexParser* parser = new RegexParser();
         std::cerr << "=> constructing RegexParser" << std::endl;
-        parser->registerRegex("@d+(L|l)?|0(x|X)@h+", "interger");
-        parser->registerRegex("@d+.@d+((e|E)(+|-)?@d+)?", "float");
+        // parser->registerRegex("@d+(L|l)?|0(x|X)@h+", "interger");
+        // parser->registerRegex("@d+.@d+((e|E)(+|-)?@d+)?", "float");
+        // parser->registerRegex("@s+", "space/ctrl");
+        // parser->registerRegex("(\\%)(-)?@d?(\\.@d+)?(d|ld|lld|f|lf|p|c|s|x)", "format");
+        // parser->registerRegex("\\/\\/@l*", "comment1");
+        /// parser->registerRegex("(@a|_)@w+", "word");
+        // parser->registerRegex("auto", "keyword");
+        parser->registerRegex("\\/\\*@.*\\*\\/", "comment2");
         std::cerr << "=> Regex registered" << std::endl;
+        
         parser->getNfa()->print();
 
         std::cerr << "=> constructing DFAConverter" << std::endl;
@@ -153,9 +162,63 @@ int main () {
         res = converter->runDFA("1.23e-1.23", token);
         std::cout << res << " " << token << std::endl;
 
+        res = converter->runDFA("%d", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%-d", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%ld", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%lld", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%f", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%-5.2f", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%lf", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%c", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%s", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%-x", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("%-2.5f", token);
+        std::cout << res << " " << token << std::endl;
+
+        res = converter->runDFA("// adsf ", token);
+        std::cout << res << " " << token << std::endl;
+        
+        res = converter->runDFA("/* adsf zhjkasdhf 中文*/", token);
+        std::cout << res << " " << token << std::endl;
+
+        Lexer lexer(*converter, "123 0x123 123L\n123lauto 0x123a1 0x1f23 1.23 1.23e+1 1.23e-1 1.23E1 1.23E-1 1.23e-1");
+        Token token1 = lexer.getNextToken();
+        while (token1.type != "" && token1.type != "EOF") {
+            std::cout << token1.type << " " << token1.value << std::endl;
+            token1 = lexer.getNextToken();
+        }
+
     }
     
     {
+        using namespace std;
+        string s = "/*注释*/";
+        string t;
+        for (auto c : s) {
+            t += c;
+            cout << (int)c << endl;
+        }
+        cout << t << endl;
         // test RegexParser
         // RegexParser* parser = new RegexParser();
         // std::cerr << "=> constructing RegexParser" << std::endl;

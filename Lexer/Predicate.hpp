@@ -3,7 +3,8 @@
 
 using Predicate = std::function<bool(int)>;
 
-Predicate single(int ch) {
+Predicate single(int ch) { 
+    std::cout << "single: " << (char)ch << std::endl;
     return [ch](int c) { return c == ch; };
 }
 

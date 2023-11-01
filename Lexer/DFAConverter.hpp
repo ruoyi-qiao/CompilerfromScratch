@@ -51,6 +51,7 @@ private:
     std::vector<NFANodeSet> dfa2nfaMap;
     std::vector<std::string> nodeToToken;
     int statesCount = 0;
+public:
     std::vector<bool> accepted;
     std::vector<std::vector<int>> goTo;
     std::vector<std::string> tokens;
@@ -111,7 +112,7 @@ void DFAConverter::transfer(NFANode* startNode) {
     while (!unchecked.empty()) {
         int state = unchecked.back();
         unchecked.pop_back();
-        for (int b = 0; b < 128; b++) {
+        for (int b = 0; b <= 128; b++) {
             NFANodeSet nextSet = epsilonClosure(next(dfa2nfaMap[state], b));
             if (nextSet.empty()) {
                 continue;
@@ -127,24 +128,41 @@ int DFAConverter::addDFAState(NFANodeSet& g, std::vector<int>& unchecked) {
         return nfa2dfaMap[g];
     }
 
-    for (auto ele : g) {
-        std::cout << ele->getID() << " ";
-    }
-    std::cout << std::endl;
 
     int state = statesCount++;
     nfa2dfaMap[g] = state;
     dfa2nfaMap.push_back(g);
     unchecked.push_back(state);
-    goTo.push_back(std::vector<int>(128, -1));
+    goTo.push_back(std::vector<int>(128 + 1, -1));
     bool isAccepted = false;
     int TokenID = -1;
-    for (auto node : g) {
+    std::string type;
+
+    for (const NFANode* node : g) {
         if (node->isAccepted()) {
-            isAccepted = true;
-            TokenID = node->getID();
-            break;
+            std::cout << "id: " << node->getID() << " ";
+            std::cout << "type: " << nodeToToken[node->getID()] << " || ";
+            if (TokenID == -1) {
+                isAccepted = true;
+                TokenID = node->getID();
+                type = nodeToToken[TokenID];
+            } else {
+                std::string currentType = nodeToToken[node->getID()];
+                if (std::stoi(currentType) < std::stoi(type)) {
+                    TokenID = node->getID();
+                    type = currentType;
+                }
+            }
         }
+    }
+
+    for (auto ele : g) {
+        std::cout << ele->getID() << " ";
+    }
+    std::cout << "\n";
+    if (isAccepted) {
+        int id = accepted.size() + 1;
+        std::cout << "DFAAccepted: " << id + 1 << std::endl;
     }
     accepted.push_back(isAccepted);
     if (TokenID != -1) tokens.push_back(nodeToToken[TokenID]);
@@ -163,11 +181,10 @@ NFANodeSet DFAConverter::next(const NFANodeSet& begin, int b) {
     return result;
 }
 
-
-
 int DFAConverter::runDFA(const std::string& input, std::string &token) {
     int state = 0;
-    for (char c : input) {
+    for (int c : input) {
+        if (c < 0) c = 128;
         state = goTo[state][c];
         if (state == -1) {
             token = "invalid";

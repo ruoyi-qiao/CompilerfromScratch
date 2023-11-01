@@ -31,6 +31,7 @@ public:
         end->setAccepted(true);
         this->type.resize(end->getID() + 1);
         this->type[end->getID()] = type;
+        std::cout << "markAcceptedState: " << end->getID() << " " << type << std::endl;
     }
 
     NFA* getNfa() {
@@ -97,7 +98,9 @@ public:
 
     NFA* checkClosure(NFA* target) { // 处理类似于 a* a+ a? 的情况
         if (input->available()) {
-            switch (input->read()) {
+            int b = input->read();
+            std::cout << "checkClosure: " << (char)b << std::endl;
+            switch (b) {
                 case '*': target->star(); break;
                 case '+': target->plus(); break;
                 case '?': target->quest(); break;
@@ -138,6 +141,7 @@ public:
         int b1 = input->read();
         if (b1 == '-') {
             int b2 = input->read();
+            std::cout << "minClazzPredicate: " << (char)b << " " << (char)b1 << " " << (char)b2 << std::endl;
             if (b2 == '[' || b2 == ']') {
                 input->retract();
                 return Predicate([b](int c) { return c == b || c == '-'; });
@@ -162,6 +166,10 @@ public:
                 case 'h': return ASCII::isHex(c);
                 case 'A':
                 case 'a': return ASCII::isAlpha(c);
+                case 'S':
+                case 's': return ASCII::isCntrlorSpace(c);
+                case 'L':
+                case 'l': return !ASCII::isNewline(c);
                 default: return true;
             }
         });

@@ -47,6 +47,14 @@ public:
         return isType(b, WORD);
     }
 
+    static bool isCntrlorSpace(int b) {
+        return isType(b, CNTRL|SPACE);
+    }
+
+    static bool isNewline(int b) {
+        return b == '\n' || b == '\r';
+    }
+
 private:
     static const int ctype[];
 };

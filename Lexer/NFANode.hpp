@@ -44,23 +44,20 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const NFANode& node) {
-        os << node.id << '(';
         switch (node.edgeType) {
             case NO_EDGE:
-                os << "null";
                 break;
             case SINGLE_EPSILON:
-                os << "ε" << node.next1->id;
+                os << node.id << " " << node.next1->id << " ε" << std::endl;
                 break;
             case DOUBLE_EPSILON:
-                os << "ε" << node.next1->id << ",ε" << node.next2->id;
+                os << node.id << " " << node.next1->id << " ε" << std::endl;
+                os << node.id << " " << node.next2->id << " ε" << std::endl;
                 break;
             case CHAR:
-                os << "c" << node.next1->id;
+                os << node.id << " " << node.next1->id << " c" << std::endl;
                 break;
         }
-        os << ')';
-        os << "->" << (node.accepted ? "Yes" : "No");
         return os;
     }
 

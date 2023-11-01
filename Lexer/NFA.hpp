@@ -22,6 +22,8 @@ public:
             start = other->start;
             end = other->end;
         } else {
+            std::cout << "checkAND:\n";
+            std::cout << end->getID() << "->" << other->start->getID() << '\n';
             end->addEpsilonEdge(other->start);
             end = other->end;
         }
@@ -51,6 +53,8 @@ public:
         end->addEpsilonEdge(newEnd);
         end->addEpsilonEdge(start);
         newStart->addEpsilonEdge(newEnd);
+        start = newStart;
+        end = newEnd;
     }
 
     void quest() {

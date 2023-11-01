@@ -2,15 +2,30 @@
 #include <iostream>
 class LexerError {
 public:
-    LexerError(const std::string& sourceCode) : sourceCode(sourceCode), line(1), column(0) {}
+    LexerError(const std::string& sourceCode) : sourceCode(sourceCode), line(1), column(1) {}
+
+    LexerError(const LexerError& other) : sourceCode(other.sourceCode), line(other.line), column(other.column) {
+        prevPositions = other.prevPositions;
+    }
 
     void handle(char c) {
+        prevPositions.push_back(std::make_pair(line, column));
         if (c == '\n') {
             line++;
-            column = 0;
+            column = 1;
         } else {
             column++;
         }
+    }
+
+    int retrace() {
+        if (prevPositions.empty()) {
+            std::cerr << "No previous position to retrace" << std::endl;
+            return -1;
+        }
+        auto [prevLine, prevColumn] = prevPositions.back();
+        prevPositions.pop_back();
+        return 0;
     }
 
     void reportError(const std::string& message) {
@@ -31,6 +46,7 @@ public:
 
 private:
     const std::string& sourceCode;
+    std::vector<std::pair<int, int>> prevPositions;
     int line;
     int column;
 

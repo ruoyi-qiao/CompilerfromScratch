@@ -4,7 +4,8 @@
 #include <iostream>
 
 class StringInput {
-private:
+// private:
+public:
     std::string data;
     size_t forward;
     std::vector<size_t> marks;
@@ -24,6 +25,13 @@ public:
 
     int read() {
         checkAvailable();
+        int result = data[forward++];
+        if (result < 0) result = 128;
+        return result;
+    }
+
+    int readOrigin() {
+        checkAvailable();
         return data[forward++];
     }
 
@@ -33,7 +41,9 @@ public:
         }
         forward += count - 1;
         checkAvailable();
-        return data[forward++];
+        int result = data[forward++];
+        if (result < 0) result = 128;
+        return result;
     }
 
     void mark() {
@@ -51,6 +61,10 @@ public:
             forward = consume ? marks.back() : marks.back();
             marks.pop_back();
         }
+    }
+
+    void retrace() {
+        forward = forward > 0 ? forward - 1 : 0;
     }
 
     std::string capture() {
