@@ -2,32 +2,28 @@
 
 Node::Node(){
     t = {};
-    left = {};
-    right = {};
 }
 
-Node::Node(const Token& token){
+Node::Node(const Token& token) {
     t = token;
-    left = {};
-    right = {};
 }
 
-Node::Node(const Token& token, std::shared_ptr<Node> left, std::shared_ptr<Node> right){
+Node::Node(const Token& token, const std::vector<std::shared_ptr<Node>>& children) {
     t = token;
-    left = left;
-    right = right;
+    this->children = children;
 }
 
-const Token& Node::GetToken(){
+const Token& Node::GetToken() {
     return t;
 }
 
-std::shared_ptr<Node> Node::GetLeft(){
-    return left;
+void Node::addChild(const std::shared_ptr<Node>& child) {
+    children.push_back(child);
+    childCount++;
 }
 
-std::shared_ptr<Node> Node::GetRight(){
-    return right;
+void Node::setChild(int index, const std::shared_ptr<Node>& child) {
+    children[index] = child;
 }
 
 std::string Node::ToString(){

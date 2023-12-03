@@ -3,25 +3,25 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 #include "utilities/Token.hpp"
 
 
 class Node {
 private:
+    int childCount;
     Token t;
-    std::shared_ptr<Node> left;
-    std::shared_ptr<Node> right;
+    std::vector<std::shared_ptr<Node>> children;
 
 public:
     Node();
     Node(const Token&);
-    Node(const Token&, std::shared_ptr<Node>, std::shared_ptr<Node>);
+    Node(const Token&, const std::vector<std::shared_ptr<Node>>&);
 
     const Token& GetToken();
-    std::shared_ptr<Node> GetLeft();
-    std::shared_ptr<Node> GetRight();
-    void SetLeft(std::shared_ptr<Node>);
-    void SetRight(std::shared_ptr<Node>);
+    std::vector<std::shared_ptr<Node>> GetChildren();
+    void addChild(const std::shared_ptr<Node>&);
+    void setChild(int, const std::shared_ptr<Node>&);
 
     std::string ToString();
 };
