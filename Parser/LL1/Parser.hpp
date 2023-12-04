@@ -8,6 +8,10 @@
 #include "grammar.hpp"
 #include "utilities/Node.hpp"
 
+#define FOR_SUBMISSION 1
+
+
+
 class Parser {
 private:
     Lexer lexer;
@@ -15,19 +19,23 @@ private:
     std::string sourceCode;
     int getTag(const std::string&);
     std::string convert(int);
+    void error_handler(std::string&, int top);
 
 public:
+    std::string errorToken;
+
     std::vector<std::shared_ptr<Node>> Parse();
     void SetSourceCode(std::string&);
 };
 
 void Parser::SetSourceCode(std::string& sourceCode){
+    errorToken = "";
     lexer.SetSourceCode(sourceCode);
 }
 
 std::vector<std::shared_ptr<Node>> Parser::Parse(){
 
-    std::cout << "Parsing..." << std::endl;
+    std::cerr << "Parsing..." << std::endl;
 
     std::string word = lexer.GetNextToken().lexeme;
     std::vector<int> stack;
@@ -38,37 +46,44 @@ std::vector<std::shared_ptr<Node>> Parser::Parse(){
     stack.push_back(_program);
     nodes.push_back(std::make_shared<Node>(Node(convert(_program))));
     while (true) {
-        if (stack.back() == _eof && word == "$") {
+        if (stack.back() == _eof && word == "$") { /* accept */
             break;
-        } else if (isTerminal(stack.back()) || word == "$") {
+        } else if (isTerminal(stack.back()) || word == "$") { /* terminal */
+            std::cout << "word1: " << word << "\t" << convert(stack.back()) << "\t[" << lexer.GetLineAndColumn().first << ", " << lexer.GetLineAndColumn().second << "]" << std::endl;
             if (stack.back() == getTag(word)) {
                 stack.pop_back();
                 nodes.pop_back();
                 word = lexer.GetNextToken().lexeme;
-                // std::cout << "word: " << word << std::endl;
             } else {
                 throw std::runtime_error("Syntax error");
             }
-        } else {
+        } else { /* non-terminal */
+            std::cout << "word2: " << word << "\t" << convert(stack.back()) << "\t[" << lexer.GetLineAndColumn().first << ", " << lexer.GetLineAndColumn().second << "]" << std::endl;
             int rule = LL1Table[stack.back()][getTag(word) - NONTERMINAL_COUNT];
-            if (rule == -1) {
-                throw std::runtime_error("Syntax error");
+            if (rule == -1) { 
+#if FOR_SUBMISSION
+                error_handler(word, stack.back());
+                rule = LL1Table[stack.back()][getTag(word) - NONTERMINAL_COUNT];
+                lexer.unreadToken();
+                goto skip;
+#else
+                std::cerr << "stack: " << convert(stack.back()) << std::endl;
+                std::cerr << "word: " << word << std::endl;
+                lexer.reportError("Syntax error");
+#endif
             } else {
+            skip:
                 std::shared_ptr<Node> par = nodes.back();
                 std::string parState = convert(stack.back());
-                // std::cout << par->GetToken().lexeme << " -> " << parState << std::endl;
                 stack.pop_back();
                 nodes.pop_back();
                 int rulesize = 0;
                 while (rulesize < MAX_RULE_LENGTH && rulesTable[rule][rulesize] != -1) {
                     rulesize++;
                 }
-                std::cout << "ky: " << parState << std::endl;
                 std::vector<std::shared_ptr<Node>> children;
                 for (int i = rulesize - 1; i >= 0; i--) {
                     std::shared_ptr<Node> node = std::make_shared<Node>(convert(rulesTable[rule][i]));
-                    // std::cout << "\t" << convert(rulesTable[rule][i]) << std::endl;
-                    // par->addChild(node);
                     children.push_back(node);
                     if (rulesTable[rule][i] != _epsilon){
                         stack.push_back(rulesTable[rule][i]);
@@ -78,11 +93,6 @@ std::vector<std::shared_ptr<Node>> Parser::Parse(){
                 reverse(children.begin(), children.end());
                 par->setChildren(children);
                 tree.push_back(par);
-
-                // std::cout << "ch: " << par->ToString() << std::endl;
-                for (auto child : par->GetChildren()) {
-                    std::cout << "\t " << child->GetToken().lexeme << std::endl;
-                }
             }
         }
     }
@@ -94,17 +104,7 @@ std::vector<std::shared_ptr<Node>> Parser::Parse(){
     // }
     return tree;
 }
-/*
-{ }
-if ( ) then else
-while ( )
-ID = 
-> < >= <= ==
-+ -
-* /
-ID NUM
-E 是'空'
-*/
+
 /**
  * @brief Returns the corresponding tag for a given word.
  * 
@@ -313,6 +313,61 @@ std::string Parser::convert(int index) {
         throw std::runtime_error("Unknown token");
     }
 }
-
+/*
+FOLLOW SETS:
+<stmt>: {'ID', '"while"', '"if"', '"}"', '"{"', '"else"'}
+<compoundstmt>: {'ID', '"while"', 'eof', '"if"', '"}"', '"{"', '"else"'}
+<stmts>: {'"}"'}
+<ifstmt>: {'ID', '"while"', '"if"', '"}"', '"{"', '"else"'}
+<whilestmt>: {'ID', '"while"', '"if"', '"}"', '"{"', '"else"'}
+<assgstmt>: {'ID', '"while"', '"if"', '"}"', '"{"', '"else"'}
+<boolexpr>: {'")"'}
+<boolop>: {'ID', '"("', 'NUM'}
+<arithexpr>: {'"<="', '"=="', '")"', '">"', '"<"', '">="', '";"'}
+<arithexprprime>: {'"<="', '"=="', '")"', '">"', '"<"', '">="', '";"'}
+<multexpr>: {'"<="', '"=="', '")"', '">"', '"<"', '"-"', '">="', '";"', '"+"'}
+<multexprprime>: {'"<="', '"=="', '")"', '">"', '"<"', '"-"', '">="', '";"', '"+"'}
+<simpleexpr>: {'"=="', '"-"', '";"', '"*"', '"<="', '")"', '">"', '"<"', '">="', '"+"', '"/"'}
+*/
+void Parser::error_handler(std::string& word, int top) {
+    std::cerr << "top: " << convert(top) << std::endl;
+    if (errorToken != word) {
+        std::cout << "语法错误,第" << lexer.GetLineAndColumn().first - 1 << "行,缺少\";\"" << std::endl;
+        errorToken = word;
+        // lexer.unreadToken();
+    }
+    if (top == _program) {
+        word = "$";
+    } else if (top == _stmt){
+        word = "}";
+    } else if (top == _compoundstmt) {
+        word = "}";
+    } else if (top == _stmts) {
+        word = "}";
+    } else if (top == _ifstmt) {
+        word = "}";
+    } else if (top == _whilestmt) {
+        word = "}";
+    } else if (top == _assgstmt) {
+        word = "}";
+    } else if (top == _boolexpr) {
+        word = ")";
+    } else if (top == _boolop) {
+        word = "(";
+    } else if (top == _arithexpr) {
+        word = ";";
+    } else if (top == _arithexprprime) {
+        word = ";";
+    } else if (top == _multexpr) {
+        word = ";";
+    } else if (top == _multexprprime) {
+        word = ";";
+    } else if (top == _simpleexpr) {
+        word = ";";
+    } else {
+        std::cout << "top: " << top << std::endl;
+        throw std::runtime_error("Unknown token");
+    }
+}
 
 #endif

@@ -10,68 +10,73 @@ constexpr int TERMINAL_COUNT = 23;
 constexpr int NONTERMINAL_COUNT = 14;
 constexpr int EOF_SYMBOL = 36;
 /*
-0: <program>
-1: <stmt>
-2: <compoundstmt>
-3: <stmts>
-4: <ifstmt>
-5: <whilestmt>
-6: <assgstmt>
-7: <boolexpr>
-8: <boolop>
-9: <arithexpr>
-10: <arithexprprime>
-11: <multexpr>
-12: <multexprprime>
-13: <simpleexpr>
-14: "+"
-15: "*"
-16: ""
-17: "<="
-18: ">"
-19: "=="
-20: ">="
-21: "-"
-22: "if"
-23: ";"
-24: "then"
-25: "while"
-26: "<"
-27: "="
-28: "("
-29: "else"
-30: ")"
-31: "{"
-32: "}"
-33: NUM
-34: ID
-35: "/"
-36: eof
-0: ['<compoundstmt>']
-1: ['<ifstmt>']
-2: ['<whilestmt>']
-3: ['<assgstmt>']
-4: ['"{"', '<stmts>', '"}"']
-5: ['<stmt>', '<stmts>']
-6: ['""']
-7: ['"if"', '"("', '<boolexpr>', '")"', '"then"', '<stmt>', '"else"', '<stmt>']
-8: ['"while"', '"("', '<boolexpr>', '")"', '<stmt>']
-9: ['ID', '"="', '<arithexpr>', '";"']
-10: ['<arithexpr>', '<boolop>', '<arithexpr>']
-11: ['"<"']
-12: ['">"']
-13: ['"<="']
-14: ['">="']
-15: ['"=="']
-16: ['<multexpr>', '<arithexprprime>']
-17: ['"+"', '<multexpr>', '<arithexprprime>']
-18: ['"-"', '<multexpr>', '<arithexprprime>']
-19: ['<simpleexpr>', '<multexprprime>']
-20: ['"*"', '<simpleexpr>', '<multexprprime>']
-21: ['"/"', '<simpleexpr>', '<multexprprime>']
-22: ['ID']
-23: ['NUM']
-24: ['"("', '<arithexpr>', '")"']
+SYMBOL MAPPING:
+
+    0: <program>
+    1: <stmt>
+    2: <compoundstmt>
+    3: <stmts>
+    4: <ifstmt>
+    5: <whilestmt>
+    6: <assgstmt>
+    7: <boolexpr>
+    8: <boolop>
+    9: <arithexpr>
+    10: <arithexprprime>
+    11: <multexpr>
+    12: <multexprprime>
+    13: <simpleexpr>
+    14: "+"
+    15: "*"
+    16: ""
+    17: "<="
+    18: ">"
+    19: "=="
+    20: ">="
+    21: "-"
+    22: "if"
+    23: ";"
+    24: "then"
+    25: "while"
+    26: "<"
+    27: "="
+    28: "("
+    29: "else"
+    30: ")"
+    31: "{"
+    32: "}"
+    33: NUM
+    34: ID
+    35: "/"
+    36: eof
+
+Rules Mapping:
+
+    0: ['<compoundstmt>']
+    1: ['<ifstmt>']
+    2: ['<whilestmt>']
+    3: ['<assgstmt>']
+    4: ['"{"', '<stmts>', '"}"']
+    5: ['<stmt>', '<stmts>']
+    6: ['""']
+    7: ['"if"', '"("', '<boolexpr>', '")"', '"then"', '<stmt>', '"else"', '<stmt>']
+    8: ['"while"', '"("', '<boolexpr>', '")"', '<stmt>']
+    9: ['ID', '"="', '<arithexpr>', '";"']
+    10: ['<arithexpr>', '<boolop>', '<arithexpr>']
+    11: ['"<"']
+    12: ['">"']
+    13: ['"<="']
+    14: ['">="']
+    15: ['"=="']
+    16: ['<multexpr>', '<arithexprprime>']
+    17: ['"+"', '<multexpr>', '<arithexprprime>']
+    18: ['"-"', '<multexpr>', '<arithexprprime>']
+    19: ['<simpleexpr>', '<multexprprime>']
+    20: ['"*"', '<simpleexpr>', '<multexprprime>']
+    21: ['"/"', '<simpleexpr>', '<multexprprime>']
+    22: ['ID']
+    23: ['NUM']
+    24: ['"("', '<arithexpr>', '")"']
 */
 
 constexpr int   _program = 0, _stmt = 1, _compoundstmt = 2, 
@@ -89,7 +94,6 @@ constexpr int   _plus = 14, _times = 15, _epsilon = 16,
                 _rbrace = 32, _num = 33, _id = 34, 
                 _div = 35, _eof = 36;
 
-    //   14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
 int rulesTable[25][8] = {
 	{2, -1, -1, -1, -1, -1, -1, -1, },
 	{4, -1, -1, -1, -1, -1, -1, -1, },
@@ -142,4 +146,5 @@ bool isTerminal(int symbol) {
 bool isNonTerminal(int symbol) {
     return symbol < 14;
 }
+
 #endif // _GRAMMAR_H_

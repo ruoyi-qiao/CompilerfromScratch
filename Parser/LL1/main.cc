@@ -6,6 +6,7 @@
 
 int main () {
     std::string sourceCode = "{ \n ID = NUM ;  \n } $";
+    sourceCode = "{ \n while ( ID == NUM )\n{ \nID = NUM \n} \n } $";
     Parser parser;
     parser.SetSourceCode(sourceCode);
     std::vector<std::shared_ptr<Node>> tree = parser.Parse();
