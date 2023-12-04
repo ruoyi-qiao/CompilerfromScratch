@@ -4,6 +4,8 @@
 # if they are the same, print "Test [%d] passed"
 # otherwise, print "Test [%d] failed"
 
+g++ -std=c++11 -o ll1Parser ll1Parser.cpp
+
 cd test
 
 for i in {1..3}
@@ -19,3 +21,5 @@ do
 done
 
 cd ..
+
+rm ll1Parser   
