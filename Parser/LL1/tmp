@@ -1,0 +1,102 @@
+Parsing...
+ky: program
+	 compoundstmt
+ky: compoundstmt
+	 {
+	 stmts
+	 }
+ky: stmts
+	 stmt
+	 stmts
+ky: stmt
+	 assgstmt
+ky: assgstmt
+	 ID
+	 =
+	 arithexpr
+	 ;
+ky: arithexpr
+	 multexpr
+	 arithexprprime
+ky: multexpr
+	 simpleexpr
+	 multexprprime
+ky: simpleexpr
+	 NUM
+ky: multexprprime
+	 E
+ky: arithexprprime
+	 E
+ky: stmts
+	 E
+program
+	compoundstmt
+compoundstmt
+	{
+	stmts
+	}
+stmts
+	stmt
+	stmts
+stmt
+	assgstmt
+assgstmt
+	ID
+	=
+	arithexpr
+	;
+arithexpr
+	multexpr
+	arithexprprime
+multexpr
+	simpleexpr
+	multexprprime
+simpleexpr
+	NUM
+multexprprime
+	E
+arithexprprime
+	E
+stmts
+	E
+program
+program
+	compoundstmt
+		{
+		stmts
+			stmt
+				assgstmt
+					ID
+					=
+					arithexpr
+						multexpr
+							simpleexpr
+								NUM
+							multexprprime
+								E
+						arithexprprime
+							E
+					;
+			stmts
+				E
+		}
+program
+	compoundstmt
+		{
+		stmts
+			stmt
+				assgstmt
+					ID
+					=
+					arithexpr
+						multexpr
+							simpleexpr
+								NUM
+							multexprprime
+								E
+						arithexprprime
+							E
+					;
+			stmts
+				E
+		}

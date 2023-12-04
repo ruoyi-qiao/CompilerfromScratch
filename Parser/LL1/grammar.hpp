@@ -80,11 +80,11 @@ constexpr int   _program = 0, _stmt = 1, _compoundstmt = 2,
                 _arithexpr = 9, _arithexprprime = 10, _multexpr = 11, 
                 _multexprprime = 12, _simpleexpr = 13;
 
-constexpr int   _plus = 14, _multi = 15, _epsilon = 16, 
+constexpr int   _plus = 14, _times = 15, _epsilon = 16, 
                 _le = 17, _gt = 18, _eq = 19, 
                 _ge = 20, _minus = 21, _if = 22, 
                 _semi = 23, _then = 24, _while = 25, 
-                _le = 26, _assign = 27, _lparen = 28, 
+                _lt = 26, _assign = 27, _lparen = 28, 
                 _else = 29, _rparen = 30, _lbrace = 31, 
                 _rbrace = 32, _num = 33, _id = 34, 
                 _div = 35, _eof = 36;
