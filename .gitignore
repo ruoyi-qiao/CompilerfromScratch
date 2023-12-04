@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+#python cache
+__pycache__/
+
+
+hide-digit*
+*.yy.c
