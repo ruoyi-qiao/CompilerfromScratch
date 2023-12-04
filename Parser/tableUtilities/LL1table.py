@@ -1,10 +1,10 @@
 from bnf import *
-from leftrec import *
+from leftrecur import *
 from sets import *
 
 
 if __name__ == '__main__':
-    nts = ParseBNF('rules.txt').Build()
+    nts = ParseBNF('../LL1/rules.txt').Build()
     
     # comment this line to keep the original syntax
     # nts = EliminateLeftRecursion(nts) 
