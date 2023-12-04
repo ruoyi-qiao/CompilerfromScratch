@@ -331,7 +331,8 @@ FOLLOW SETS:
 */
 void Parser::error_handler(std::string& word, int top) {
     std::cerr << "top: " << convert(top) << std::endl;
-    if (errorToken != word) {
+    // if (errorToken != word) 
+    {
         std::cout << "语法错误,第" << lexer.GetLineAndColumn().first - 1 << "行,缺少\";\"" << std::endl;
         errorToken = word;
         // lexer.unreadToken();

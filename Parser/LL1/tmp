@@ -1,175 +1,25 @@
 word2: {	program	[1, 1]
 word2: {	compoundstmt	[1, 1]
 word1: {	{	[1, 1]
-word2: while	stmts	[2, 6]
-word2: while	stmt	[2, 6]
-word2: while	whilestmt	[2, 6]
-word1: while	while	[2, 6]
-word1: (	(	[2, 8]
-word2: ID	boolexpr	[2, 11]
-word2: ID	arithexpr	[2, 11]
-word2: ID	multexpr	[2, 11]
-word2: ID	simpleexpr	[2, 11]
-word1: ID	ID	[2, 11]
-word2: ==	multexprprime	[2, 14]
-word2: ==	arithexprprime	[2, 14]
-word2: ==	boolop	[2, 14]
-word1: ==	==	[2, 14]
-word2: NUM	arithexpr	[2, 18]
-word2: NUM	multexpr	[2, 18]
-word2: NUM	simpleexpr	[2, 18]
-word1: NUM	NUM	[2, 18]
-word2: )	multexprprime	[2, 20]
-word2: )	arithexprprime	[2, 20]
-word1: )	)	[2, 20]
-word2: {	stmt	[3, 1]
-word2: {	compoundstmt	[3, 1]
-word1: {	{	[3, 1]
-word2: ID	stmts	[4, 2]
-word2: ID	stmt	[4, 2]
-word2: ID	assgstmt	[4, 2]
-word1: ID	ID	[4, 2]
-word1: =	=	[4, 4]
-word2: NUM	arithexpr	[4, 8]
-word2: NUM	multexpr	[4, 8]
-word2: NUM	simpleexpr	[4, 8]
-word1: NUM	NUM	[4, 8]
-word2: }	multexprprime	[5, 1]
-语法错误,第4行,缺少";"
-word2: ;	arithexprprime	[4, 8]
-word1: ;	;	[4, 8]
-word2: }	stmts	[5, 1]
-word1: }	}	[5, 1]
-word2: }	stmts	[6, 2]
-word1: }	}	[6, 2]
-program
-	compoundstmt
-compoundstmt
-	{
-	stmts
-	}
-stmts
-	stmt
-	stmts
-stmt
-	whilestmt
-whilestmt
-	while
-	(
-	boolexpr
-	)
-	stmt
-boolexpr
-	arithexpr
-	boolop
-	arithexpr
-arithexpr
-	multexpr
-	arithexprprime
-multexpr
-	simpleexpr
-	multexprprime
-simpleexpr
-	ID
-multexprprime
-	E
-arithexprprime
-	E
-boolop
-	==
-arithexpr
-	multexpr
-	arithexprprime
-multexpr
-	simpleexpr
-	multexprprime
-simpleexpr
-	NUM
-multexprprime
-	E
-arithexprprime
-	E
-stmt
-	compoundstmt
-compoundstmt
-	{
-	stmts
-	}
-stmts
-	stmt
-	stmts
-stmt
-	assgstmt
-assgstmt
-	ID
-	=
-	arithexpr
-	;
-arithexpr
-	multexpr
-	arithexprprime
-multexpr
-	simpleexpr
-	multexprprime
-simpleexpr
-	NUM
-multexprprime
-	E
-arithexprprime
-	E
-stmts
-	E
-stmts
-	E
-program
-program
-	compoundstmt
-		{
-		stmts
-			stmt
-				whilestmt
-					while
-					(
-					boolexpr
-						arithexpr
-							multexpr
-								simpleexpr
-									ID
-								multexprprime
-									E
-							arithexprprime
-								E
-						boolop
-							==
-						arithexpr
-							multexpr
-								simpleexpr
-									NUM
-								multexprprime
-									E
-							arithexprprime
-								E
-					)
-					stmt
-						compoundstmt
-							{
-							stmts
-								stmt
-									assgstmt
-										ID
-										=
-										arithexpr
-											multexpr
-												simpleexpr
-													NUM
-												multexprprime
-													E
-											arithexprprime
-												E
-										;
-								stmts
-									E
-							}
-			stmts
-				E
-		}
+word2: if	stmts	[2, 3]
+word2: if	stmt	[2, 3]
+word2: if	ifstmt	[2, 3]
+word1: if	if	[2, 3]
+word1: (	(	[2, 5]
+word2: ID	boolexpr	[2, 8]
+word2: ID	arithexpr	[2, 8]
+word2: ID	multexpr	[2, 8]
+word2: ID	simpleexpr	[2, 8]
+word1: ID	ID	[2, 8]
+word2: ==	multexprprime	[2, 11]
+word2: ==	arithexprprime	[2, 11]
+word2: ==	boolop	[2, 11]
+word1: ==	==	[2, 11]
+word2: NUM	arithexpr	[2, 15]
+word2: NUM	multexpr	[2, 15]
+word2: NUM	simpleexpr	[2, 15]
+word1: NUM	NUM	[2, 15]
+word2: )	multexprprime	[2, 17]
+word2: )	arithexprprime	[2, 17]
+word1: )	)	[2, 17]
+word1: {	then	[3, 1]
