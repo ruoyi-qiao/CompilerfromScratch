@@ -664,10 +664,9 @@ std::string Parser::convert(int index) {
  * @param top The top of the stack.
  */
 void Parser::error_handler(std::string& word, int top) {
-    std::cerr << "top: " << convert(top) << std::endl;
-    // if (errorToken != word) 
+
     {
-        std::cout << "语法错误,第" << lexer.GetLineAndColumn().first - 1 << "行,缺少\";\"" << std::endl;
+        std::cout << "语法错误,第" << lexer.GetLineAndColumn().first - 1 << "行,缺少\"";
     }
     if (top == _program) {
         word = "$";
@@ -700,6 +699,7 @@ void Parser::error_handler(std::string& word, int top) {
     } else {
         lexer.reportError("Unknown token");
     }
+    std::cout << word << "\"" << std::endl;
 }
 
 
