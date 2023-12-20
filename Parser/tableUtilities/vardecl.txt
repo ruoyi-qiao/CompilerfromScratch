@@ -1,0 +1,7 @@
+<expr> ::= <type> <v-list>
+
+<type> ::= "int"
+         | "real"
+
+<v-list> ::= <v-list> "," "id"
+         | "id"
