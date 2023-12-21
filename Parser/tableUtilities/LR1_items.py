@@ -59,11 +59,11 @@ def closureLR1(items: LRState, nts: NonTerminals):
 
 
 if __name__ == '__main__':
-    nts = ParseBNF('vardecl.txt').Build()
+    nts = ParseBNF('../LR1/rules.txt').Build()
     
     init = LRState()
-    init += Item1('<expr\'>', ['<expr>',], 0, 'eof')
-    c, transition = GetStates(init, nts, '<expr>', closureLR1)
+    init += Item1('<program\'>', ['<program>',], 0, 'eof')
+    c, transition = GetStates(init, nts, '<program>', closureLR1)
     
     for state in c:
         print(state)

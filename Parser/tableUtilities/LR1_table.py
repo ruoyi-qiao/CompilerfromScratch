@@ -70,6 +70,13 @@ if __name__ == '__main__':
     init += Item1('<program\'>', ['<program>',], 0, 'eof')
     C, transition = GetStates(init, nts, '<program>', closureLR1)
 
+    ########################################
+    for state in C:
+        print(state)
+    for (key, value) in transition.items():
+        print(key, ':', value, sep=' ')
+    ########################################
+        
     actionTable = dict()
     gotoTable = dict()
 
@@ -80,8 +87,9 @@ if __name__ == '__main__':
                 actionTable[(name, 'eof')] = 'Accept!'
             else:
                 next2Dot = item.Where()
-                if not next2Dot:
+                if not next2Dot or next2Dot == '""':
                     actionTable[(name, item.lookahead)] = item # an item to reduce
+                    # print(item.Index, item.name, item._rule, item._pos, item.lookahead)
                 elif next2Dot and next2Dot[0] != '<':
                     to = transition[(name, next2Dot)]
                     actionTable[(name, next2Dot)] = to # shift to some state
@@ -89,7 +97,7 @@ if __name__ == '__main__':
     for state in C:
         for symbolName in nts.GetName():
             key = (state.name, symbolName)
-            if key in transition.keys():
+            if key in transition.keys():  
                 gotoTable[key] = transition[key]
 
     print('ACTION TABLE:')
@@ -118,16 +126,18 @@ if __name__ == '__main__':
     terminal2Index = dict()
     Index2NonTerminal = dict()
 
-    # print(CStyleTable('LR1ActionTable', actionTable, terminal2Index, True))
-    # print(CStyleTable('LR1GotoTable', gotoTable, nonTerminal2Index, False))
+    print(CStyleTable('LR1ActionTable', actionTable, terminal2Index, True))
+    print(CStyleTable('LR1GotoTable', gotoTable, nonTerminal2Index, False))
 
     Index2NonTerminal = {v: k for k, v in nonTerminal2Index.items()}
     Index2Terminal = {v: k for k, v in terminal2Index.items()}
 
-    # print(CppStyleMap(Index2NonTerminal, 'int', 'std::string', 'Index2NonTerminal'))
-    # print(CppStyleMap(Index2Terminal, 'int', 'std::string', 'Index2Terminal'))
-    # print(CppStyleMap(nonTerminal2Index, 'std::string', 'int', 'NonTerminal2Index'))
-    # print(CppStyleMap(terminal2Index, 'std::string', 'int', 'Terminal2Index'))
+    nonTerminal2Index = {'\"' +  k.strip('<>') + '\"': v for k, v in nonTerminal2Index.items()}
+
+    print(CppStyleMap(Index2NonTerminal, 'int', 'std::string', 'Index2NonTerminal'))
+    print(CppStyleMap(Index2Terminal, 'int', 'std::string', 'Index2Terminal'))
+    print(CppStyleMap(nonTerminal2Index, 'std::string', 'int', 'NonTerminal2Index'))
+    print(CppStyleMap(terminal2Index, 'std::string', 'int', 'Terminal2Index'))
 
     prodcutionCount = 0
     productionLength = list()
@@ -136,14 +146,17 @@ if __name__ == '__main__':
 
     for nonTerminal in nts.GetName():
         for rule in nts[nonTerminal]:
-            productionLength.append(len(rule))
+            if len(rule) == 1 and rule[0] == '""':
+                productionLength.append(0)
+            else:
+                productionLength.append(len(rule))
             # remove <> and wrap with ""
             prodcutionName.append('\"' + nonTerminal.strip('<>') + '\"')
     
     prodcutionCount = len(productionLength)
 
-    print(productionLength)
-    print(prodcutionName)
+    # print(productionLength)
+    # print(prodcutionName)
 
     print(CppStyleVector(productionLength, 'int', 'productionLength'))
     print(CppStyleVector(prodcutionName, 'std::string', 'productionName'))

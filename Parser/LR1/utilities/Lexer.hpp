@@ -64,7 +64,7 @@ const std::string Lexer::readToken() {
     // tokens are splited by space
     std::string token;
     lastTokenIndex.push_back(index);
-    while (index < sourceCode.length()) {
+    while (index < int(sourceCode.length())) {
         char c = readChar();
         if (c == ' ' || c == '\t' || c == '\n') {
             if (token.length() > 0) {
@@ -85,7 +85,7 @@ void Lexer::unreadToken() {
 
 inline char Lexer::readChar()
 {
-    if (index < sourceCode.length()) {
+    if (index < int(sourceCode.length())) {
         return sourceCode[index++];
     }
     return 0;

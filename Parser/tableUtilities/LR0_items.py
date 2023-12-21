@@ -12,10 +12,10 @@ class Item0:
         s = [self._name, ' ::= ']
         for i in range(len(self._rule)):
             if i == self._pos:
-                s.append('• ')
+                s.append('* ')
             s.extend((self._rule[i], ' '))
         if self._pos == len(self._rule):
-            s.append('•')
+            s.append('*')
         return ''.join(s)
 
     def __eq__(self, __o:object) -> bool:

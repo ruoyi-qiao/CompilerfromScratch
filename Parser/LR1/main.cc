@@ -6,19 +6,23 @@
 
 int main () {
     std::string sourceCode = "{ \n ID = NUM ;  \n } $";
-    sourceCode = "{ \n while ( ID == NUM )\n{ \nID = NUM \n} \n } $";
-    sourceCode = "{ \n if ( ID == NUM )\nthen { \nID = NUM \n} \n else \n{ \nID = NUM \n} \n } $";
+    sourceCode = "{ \n while ( ID == NUM )\n{ \nID = NUM ;\n} \n } $";
+    sourceCode = "{ \n if ( ID == NUM )\nthen { \nID = NUM ;\n} \n else \n{ \nID = NUM ;\n} \n } $";
     Parser parser;
     parser.SetSourceCode(sourceCode);
-    std::vector<std::shared_ptr<Node>> tree = parser.Parse();
-    for (auto node : tree) {
-        std::cout << node->ToString() << std::endl;
-        for (auto child : node->GetChildren()) {
-            std::cout << "\t" << child->ToString() << std::endl;
+    std::vector<std::vector<std::string>> snapshots = parser.Parse();
+    
+    std::vector<std::vector<std::string>>::reverse_iterator rit;
+    for (rit = snapshots.rbegin(); rit != snapshots.rend(); rit++) {
+    
+        std::vector<std::string>::iterator it;
+        for (it = rit->begin(); it != rit->end(); it++) {
+            std::cout << *it << " ";
         }
+        
+        if (next(rit) != snapshots.rend())
+            std::cout << " => " << std::endl; 
     }
-    std::shared_ptr<Node> root = tree[0];
-    std::cout << root->ToString() << std::endl;
-    root->PrintTree(0, tree);
+    
     return 0;
 }
