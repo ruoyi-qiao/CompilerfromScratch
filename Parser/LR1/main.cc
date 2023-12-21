@@ -7,7 +7,7 @@
 int main () {
     std::string sourceCode = "{ \n ID = NUM ;  \n } $";
     sourceCode = "{ \n while ( ID == NUM )\n{ \nID = NUM \n} \n } $";
-    // sourceCode = "{ \n if ( ID == NUM )\nthen { \nID = NUM ;\n} \n else \n{ \nID = NUM ;\n} \n } $";
+    // sourceCode = "{ \n if ( ID == NUM )\nthen { \nID = NUM \n} \n else \n{ \nID = NUM \n} \n } $";
     Parser parser;
     parser.SetSourceCode(sourceCode);
     std::vector<std::vector<std::string>> snapshots = parser.Parse();

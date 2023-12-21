@@ -162,7 +162,7 @@ void Parser::error_handle(std::string & errorToken, int state, int & action)  {
     for (int i = 0; i < TerminalCount; i++) {
         int index = terminalPriorities[i];
         if (LR1ActionTable[state][index] != -1) {
-            std::cout << "语法错误,第" << lexer.GetLineAndColumn().first - 1 << "行,缺少\"";
+            std::cout << "语法错误,第" << lexer.GetLineAndColumn().first << "行,缺少\"";
             std::cout << "Expecting " << convert(index);
             std::cout << "\"" << std::endl;
             errorToken = convert(index);
@@ -171,11 +171,10 @@ void Parser::error_handle(std::string & errorToken, int state, int & action)  {
         }
     }
 
-    std::cout << "unrecoverable error on line " << lexer.GetLineAndColumn().first - 1 << std::endl;
+    std::cout << "unrecoverable error on line " << lexer.GetLineAndColumn().first << std::endl;
     exit(1);
 }
 
-int c = 0;
 void Parser::insert_missing_token(std::string& errorToken, int endpos) {
     int reminder = snapshots.back().size() - endpos - 1;
     // insert the token to each snapshot
@@ -187,6 +186,5 @@ void Parser::insert_missing_token(std::string& errorToken, int endpos) {
             std::cerr << s << " ";
         } std::cerr << std::endl;
     }
-    if (c++) exit(1);
 }
 #endif
