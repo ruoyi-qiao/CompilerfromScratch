@@ -15,13 +15,13 @@ private:
     std::vector<int> lastTokenIndex;
 
     const std::string readToken();
-    const std::string checkToken();
     inline char readChar();
     inline char unreadChar();
 
 public:
     void SetSourceCode(const std::string&);
-    Token GetNextToken();
+    Token consumeToken();
+    Token checkToken();
     void unreadToken();
     void reportError(const std::string&);
     std::pair<int, int> GetLineAndColumn();
@@ -54,7 +54,7 @@ void Lexer::SetSourceCode(const std::string& l){
     }
 }
 
-Token Lexer::GetNextToken(){
+Token Lexer::consumeToken(){
     Token token;
     std::string lexeme = readToken();
     token.lexeme = lexeme;
@@ -79,12 +79,12 @@ const std::string Lexer::readToken() {
     return token;
 }
 
-const std::string Lexer::checkToken() {
+Token Lexer::checkToken() {
     int old = index;
     std::string token = readToken();
     lastTokenIndex.pop_back();
     index = old;
-    return token;
+    return {token};
 }
 
 void Lexer::unreadToken() {

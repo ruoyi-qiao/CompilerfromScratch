@@ -61,16 +61,15 @@ void Parser::SetSourceCode(std::string& sourceCode){
 
 std::vector<std::vector<std::string>> Parser::Parse(){
     int startState = 0, endpos = -1;
+    bool errorFlag = false;
     std::vector<int> stateStack;
     std::vector<symbol> symbolStack;
 
     stateStack.push_back(startState);
-
+    currentToken = lexer.checkToken();
     std::cerr << "Parsing..." << std::endl;
-    currentToken = lexer.GetNextToken();
     for (;;) {
         std::cerr << "Current state: " << stateStack.back() << std::endl;
-        // currentToken = lexer.GetNextToken();
         if (currentToken.lexeme == "$") {
             currentToken.lexeme = "eof";
         }
@@ -82,9 +81,9 @@ std::vector<std::vector<std::string>> Parser::Parse(){
         }
         if (action == -1) {
             std::cerr << "Error" << std::endl;
-            errorToken = currentToken.lexeme;
-            error_handle(errorToken, stateStack.back(), action);
-            insert_missing_token(errorToken, endpos);
+            errorFlag = true;
+            error_handle(currentToken.lexeme, stateStack.back(), action);
+            insert_missing_token(currentToken.lexeme, endpos);
         }
         if (action & (1 << 8)) { // reduce
             int production = action & ((1 << 8) - 1);
@@ -110,11 +109,15 @@ std::vector<std::vector<std::string>> Parser::Parse(){
             stateStack.push_back(gotoState);
             symbolStack.push_back({false, productionName[production]});
             endpos++;
-            lexer.unreadToken();
         } else { // shift
             stateStack.push_back(action);
             symbolStack.push_back({true, currentToken.lexeme});
             endpos++;
+
+            if(errorFlag) errorFlag = false;
+            else lexer.consumeToken();
+
+            currentToken = lexer.checkToken();
         }
     }
 
@@ -164,7 +167,6 @@ void Parser::error_handle(std::string & errorToken, int state, int & action)  {
             std::cout << "\"" << std::endl;
             errorToken = convert(index);
             action = LR1ActionTable[state][index];
-            lexer.unreadToken();
             return;
         }
     }
@@ -172,8 +174,9 @@ void Parser::error_handle(std::string & errorToken, int state, int & action)  {
     std::cout << "unrecoverable error on line " << lexer.GetLineAndColumn().first - 1 << std::endl;
     exit(1);
 }
+
 int c = 0;
-void Parser::insert_missing_token(std::string&, int endpos) {
+void Parser::insert_missing_token(std::string& errorToken, int endpos) {
     int reminder = snapshots.back().size() - endpos - 1;
     // insert the token to each snapshot
     for (auto & snapshot : snapshots) {
