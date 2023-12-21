@@ -1,0 +1,112 @@
+语法错误，第4行，缺少";"
+语法错误，第12行，缺少";"
+program => 
+compoundstmt => 
+{ stmts } => 
+{ stmt stmts } => 
+{ stmt } => 
+{ ifstmt } => 
+{ if ( boolexpr ) then stmt else stmt } => 
+{ if ( boolexpr ) then stmt else compoundstmt } => 
+{ if ( boolexpr ) then stmt else { stmts } } => 
+{ if ( boolexpr ) then stmt else { stmt stmts } } => 
+{ if ( boolexpr ) then stmt else { stmt stmt stmts } } => 
+{ if ( boolexpr ) then stmt else { stmt stmt } } => 
+{ if ( boolexpr ) then stmt else { stmt whilestmt } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) stmt } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) compoundstmt } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmts } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt stmts } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt stmt stmts } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt stmt } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt assgstmt } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = arithexpr ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = multexpr arithexprprime ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = multexpr ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = simpleexpr multexprprime ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = simpleexpr ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( arithexpr ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr arithexprprime ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr arithexprprime ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr arithexprprime ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr + multexpr arithexprprime ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr + multexpr ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr + simpleexpr multexprprime ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr + simpleexpr ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - multexpr + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - simpleexpr multexprprime + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - simpleexpr + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( arithexpr ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( multexpr arithexprprime ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( multexpr ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( simpleexpr multexprprime ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( simpleexpr / simpleexpr multexprprime ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( simpleexpr / simpleexpr ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( simpleexpr / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + multexpr - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + simpleexpr multexprprime - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + simpleexpr * simpleexpr multexprprime - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + simpleexpr * simpleexpr - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + simpleexpr * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( multexpr + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( simpleexpr multexprprime + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( simpleexpr + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { stmt ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { assgstmt ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = arithexpr ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = multexpr arithexprprime ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = multexpr ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = simpleexpr multexprprime ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = simpleexpr ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( arithexpr ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr arithexprprime ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr + multexpr arithexprprime ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr + multexpr ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr + simpleexpr multexprprime ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr + simpleexpr ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( multexpr + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( simpleexpr multexprprime + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( simpleexpr + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( boolexpr ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop arithexpr ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop multexpr arithexprprime ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop multexpr ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop simpleexpr multexprprime ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop simpleexpr ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr boolop NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( arithexpr == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( multexpr arithexprprime == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( multexpr == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( simpleexpr multexprprime == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( simpleexpr == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { stmt while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { assgstmt while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = arithexpr ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = multexpr arithexprprime ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = multexpr ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = simpleexpr multexprprime ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = simpleexpr ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then stmt else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then compoundstmt else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { stmts } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { stmt stmts } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { stmt } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { assgstmt } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = arithexpr ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = multexpr arithexprprime ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = multexpr ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = simpleexpr multexprprime ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = simpleexpr ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( boolexpr ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop arithexpr ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop multexpr arithexprprime ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop multexpr ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop simpleexpr multexprprime ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop simpleexpr ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr boolop NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( arithexpr == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( multexpr arithexprprime == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( multexpr == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( simpleexpr multexprprime == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( simpleexpr == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } => 
+{ if ( ID == NUM ) then { ID = NUM ; } else { ID = NUM ; while ( ID == NUM ) { ID = ( NUM + NUM ) ; ID = ( NUM + NUM * NUM - ( NUM / ID ) + ID ) ; } } } 
