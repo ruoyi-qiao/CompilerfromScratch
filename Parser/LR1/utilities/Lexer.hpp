@@ -15,6 +15,7 @@ private:
     std::vector<int> lastTokenIndex;
 
     const std::string readToken();
+    const std::string checkToken();
     inline char readChar();
     inline char unreadChar();
 
@@ -75,6 +76,14 @@ const std::string Lexer::readToken() {
             token += c;
         }
     }
+    return token;
+}
+
+const std::string Lexer::checkToken() {
+    int old = index;
+    std::string token = readToken();
+    lastTokenIndex.pop_back();
+    index = old;
     return token;
 }
 

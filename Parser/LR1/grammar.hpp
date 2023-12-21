@@ -7,7 +7,7 @@
 const int NonTerminalCount = 14;
 const int TerminalCount = 22;
 
-// how do terminals map to indices: "(" -> 0; ")" -> 1; "*" -> 2; "+" -> 3; "-" -> 4; "/" -> 5; ";" -> 6; "<" -> 7; "<=" -> 8; "=" -> 9; "==" -> 10; ">" -> 11; ">=" -> 12; "ID" -> 13; "NUM" -> 14; "else" -> 15; "if" -> 16; "then" -> 17; "while" -> 18; "{" -> 19; "}" -> 20; eof -> 21; 
+// terminals map to indices: "(" -> 0; ")" -> 1; "*" -> 2; "+" -> 3; "-" -> 4; "/" -> 5; ";" -> 6; "<" -> 7; "<=" -> 8; "=" -> 9; "==" -> 10; ">" -> 11; ">=" -> 12; "ID" -> 13; "NUM" -> 14; "else" -> 15; "if" -> 16; "then" -> 17; "while" -> 18; "{" -> 19; "}" -> 20; eof -> 21; 
 static const int LR1ActionTable[134][22] = {
 	{   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,   3,  -1,  -1,},
 	{   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,   0,},
@@ -144,7 +144,7 @@ static const int LR1ActionTable[134][22] = {
 	{   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  97,  -1,  -1,  95,  -1,  98,  96,  -1,  -1,},
 	{   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 264,  -1,  -1,  -1,  -1,  -1,  -1,},
 };
-// how do terminals map to indices: <arithexpr> -> 0; <arithexprprime> -> 1; <assgstmt> -> 2; <boolexpr> -> 3; <boolop> -> 4; <compoundstmt> -> 5; <ifstmt> -> 6; <multexpr> -> 7; <multexprprime> -> 8; <program> -> 9; <simpleexpr> -> 10; <stmt> -> 11; <stmts> -> 12; <whilestmt> -> 13; 
+// terminals map to indices: <arithexpr> -> 0; <arithexprprime> -> 1; <assgstmt> -> 2; <boolexpr> -> 3; <boolop> -> 4; <compoundstmt> -> 5; <ifstmt> -> 6; <multexpr> -> 7; <multexprprime> -> 8; <program> -> 9; <simpleexpr> -> 10; <stmt> -> 11; <stmts> -> 12; <whilestmt> -> 13; 
 static const int LR1GotoTable[133][14] = {
 	{   -1,  -1,  -1,  -1,  -1,   2,  -1,  -1,  -1,   1,  -1,  -1,  -1,  -1,},
 	{   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,},
