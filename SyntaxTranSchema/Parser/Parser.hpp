@@ -16,7 +16,7 @@ private:
     Word look;
     Env* top = nullptr;
     int used = 0;
-    bool isExecuting = true;
+    bool isExecuting = true, error_flag = false;
 
     void move() {
         look = lexer.consumeToken();
@@ -29,6 +29,20 @@ private:
         } else {
             lexer.reportError("syntax error on line " + std::to_string(lexer.GetLineAndColumn().first) + " column " + std::to_string(lexer.GetLineAndColumn().second));
         }
+    }
+
+    void type_error(Type t1, Type t2, std::string s1, std::string s2) {
+        error_flag = true;
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
+        std::cout << "error message:line " << line << "," + s1 + "num can not be translated into " + s2 + " type" << std::endl;
+    }
+
+    void arith_error() {
+        error_flag = true;
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
+        std::cout << "error message:line " << line << ",division by zero" << std::endl;
     }
 
     void decls();
@@ -74,7 +88,8 @@ public:
         decls();
         compoundStmt();
 
-        top->print();
+        if (!error_flag)
+            top->print();
     }
 };
 
@@ -96,14 +111,17 @@ void Parser::decl() {
         match(Tag::KW_INT); id = look;
         match(Tag::ID);
         match(Tag::OP_ASSIGN); num = look;
-        match(Tag::NUM);
+        move();
 
-        assert(num.tag == Tag::NUM);
         int ival = std::stoi(num.lexeme);
 
         Id* idPtr = new Id(id, type, used, ival);
         top->put(id, *idPtr);
         used += type.width;
+
+        if (num.tag == Tag::REAL) {
+            type_error(Type::Real, Type::Int, "real", "int");
+        }
     
     } else if (look.tag == Tag::KW_REAL) {
         Word id, num;
@@ -112,17 +130,21 @@ void Parser::decl() {
         match(Tag::KW_REAL); id = look;
         match(Tag::ID);
         match(Tag::OP_ASSIGN); num = look;
-        match(Tag::REAL);
+        move();
 
-        assert(num.tag == Tag::REAL);
         float fval = std::stof(num.lexeme);
 
         Id* idPtr = new Id(id, type, used, fval);
         top->put(id, *idPtr);
         used += type.width;
+        
+        if (num.tag == Tag::NUM) {
+            type_error(Type::Int, Type::Real, "int", "real");
+        } 
 
     } else {
-        auto [line, column] = lexer.GetLineAndColumn();
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
         lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
     }
 }
@@ -135,7 +157,9 @@ void Parser::stmt() {
     } else if (look.tag == Tag::LBRACE) {
         compoundStmt();
     } else {
-        auto [line, column] = lexer.GetLineAndColumn();
+        
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
         lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
     }
 }
@@ -193,8 +217,9 @@ void Parser::assgnstmt() {
     if (isExecuting) {
         Id* idPtr = top->get(id);
         if (idPtr == nullptr) {
-            auto [line, column] = lexer.GetLineAndColumn();
-            lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
+            int line = lexer.GetLineAndColumn().first;
+            int column = lexer.GetLineAndColumn().second;
+            lexer.reportError("Identifier undefined on line " + std::to_string(line) + " column " + std::to_string(column));
         }
 
         std::cout << "before update: " << idPtr->toString() << std::endl;
@@ -240,8 +265,9 @@ Boolop Parser::boolop() {
     } else if (look.tag == Tag::OP_GE) {
         match(Tag::OP_GE);
     } else {
-        auto [line, column] = lexer.GetLineAndColumn();
-        lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
+        lexer.reportError("Unknown bool operator on line " + std::to_string(line) + " column " + std::to_string(column));
     }
     return op;
 }
@@ -250,6 +276,9 @@ Expr Parser::arithexpr() {
     ExprPrime exprPrime = arithexprprime();
     std::cout << "expr1: " << expr.type.toString() << " exprPrime1: " << exprPrime.type.toString() << std::endl;
     yield(expr, exprPrime);
+
+    if (ExprPrime::arith_error_flag) arith_error();
+
     return expr;
 }
 ExprPrime Parser::arithexprprime() {
@@ -270,8 +299,8 @@ ExprPrime Parser::arithexprprime() {
         Expr expr = multexpr();
         ExprPrime exprPrime = arithexprprime();
         yield(expr, exprPrime);
+        if (ExprPrime::arith_error_flag) arith_error();
         res = ExprPrime(expr, Tag::OP_MINUS);
-        assert(res.type != Type::Undef);
     } else {
         // epsilon
         res = ExprPrime();
@@ -286,6 +315,7 @@ Expr Parser::multexpr() {
     // output the type of expr and exprPrime
     std::cout << "expr2: " << expr.type.toString() << " exprPrime2: " << exprPrime.type.toString() << std::endl;
     yield(expr, exprPrime);
+    if (ExprPrime::arith_error_flag) arith_error();
     return expr;
 }
 
@@ -298,13 +328,15 @@ ExprPrime Parser::multexprprime() {
         Expr expr =  simpleexpr();
         ExprPrime exprPrime = multexprprime();
         yield(expr, exprPrime);
+        if (ExprPrime::arith_error_flag) arith_error();
         res = ExprPrime(expr, Tag::OP_TIMES);
-        assert(res.type != Type::Undef);
     } else if (look.tag == Tag::OP_DIVIDE) {
         match(Tag::OP_DIVIDE);
         Expr expr = simpleexpr();
         ExprPrime exprPrime = multexprprime();
         yield(expr, exprPrime);
+        if (ExprPrime::arith_error_flag) arith_error();
+    if (ExprPrime::arith_error_flag) arith_error();
         res = ExprPrime(expr, Tag::OP_DIVIDE);
 
         assert(res.type != Type::Undef);
@@ -343,7 +375,8 @@ Expr Parser::simpleexpr() {
         match(Tag::RPAREN);
         return eval;
     } else {
-        auto [line, column] = lexer.GetLineAndColumn();
+        int line = lexer.GetLineAndColumn().first;
+        int column = lexer.GetLineAndColumn().second;
         lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
     }
 }

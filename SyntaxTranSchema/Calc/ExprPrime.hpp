@@ -7,6 +7,7 @@ class ExprPrime : public Expr {
 
 public:
     int opcode;
+    static bool arith_error_flag;
 
     ExprPrime() : opcode(0) {
         this->type = Type::Undef;
@@ -52,6 +53,9 @@ void yield (Expr &expr, ExprPrime e) {
                 result = Expr(e.op, e.type, expr.IdValue.ival * e.IdValue.ival);
                 break;
             case Tag::OP_DIVIDE:
+                if (e.IdValue.ival == 0) {
+                    ExprPrime::arith_error_flag = true;
+                }
                 result = Expr(e.op, e.type, expr.IdValue.ival / e.IdValue.ival);
                 break;
             default:
@@ -70,6 +74,9 @@ void yield (Expr &expr, ExprPrime e) {
                 result = Expr(e.op, e.type, expr.IdValue.fval * e.IdValue.fval);
                 break;
             case Tag::OP_DIVIDE:
+                if (e.IdValue.fval == 0) {
+                    ExprPrime::arith_error_flag = true;
+                }
                 result = Expr(e.op, e.type, expr.IdValue.fval / e.IdValue.fval);
                 break;
             default:
@@ -79,3 +86,6 @@ void yield (Expr &expr, ExprPrime e) {
 
     expr = result;
 }
+
+
+bool ExprPrime::arith_error_flag = false;

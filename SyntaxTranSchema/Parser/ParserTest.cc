@@ -43,13 +43,13 @@ int main (int argc, char** argv) {
     code += "} $";
     std::stringstream stream;
     stream << "int a = 3 ;\n"
-         << "int b = 5 ;\n"
-         << "real c = 3.0 ;\n\n"
+         << "int b = 5.7 ;\n"
+         << "real c = 3 ;\n\n"
          << "{\n"
          << "    a = a + 1 ;\n"
          << "    b = b * a ;\n\n"
          << "    if ( a < b ) then {\n"
-         << "        c = c / 10 ;\n  b = b + 2.0 ; "
+         << "        c = c / 0 ;\n  b = b + 2.0 ; "
          << "    } else \n"
          << "        c = c / 4 ;\n"
          << "    \n"
