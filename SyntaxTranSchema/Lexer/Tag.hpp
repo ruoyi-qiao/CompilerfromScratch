@@ -1,7 +1,6 @@
 #pragma once
 
-class Tag {
-public:
+namespace Tag {
     static const int 
         // keywords
         KW_INT = 1 + (1 << 8),
