@@ -3,6 +3,7 @@
 namespace Tag {
     static const int 
         // keywords
+        KW_UNDEF = 0 + (1 << 8),
         KW_INT = 1 + (1 << 8),
         KW_REAL = 2 + (1 << 8),
         KW_IF = 3 + (1 << 8),

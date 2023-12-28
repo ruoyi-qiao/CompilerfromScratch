@@ -13,36 +13,19 @@ public:
         if (expr1.type != expr2.type) {
             throw std::runtime_error("type mismatch");
         }
-        if (expr1.type == Type::Int) {
-            switch (tag) {
-                case Tag::OP_EQ:
-                    return expr1.IdValue.ival == expr2.IdValue.ival;
-                case Tag::OP_LT:
-                    return expr1.IdValue.ival < expr2.IdValue.ival;
-                case Tag::OP_GT:
-                    return expr1.IdValue.ival > expr2.IdValue.ival;
-                case Tag::OP_LE:
-                    return expr1.IdValue.ival <= expr2.IdValue.ival;
-                case Tag::OP_GE:
-                    return expr1.IdValue.ival >= expr2.IdValue.ival;
-                default:
-                    throw std::runtime_error("unknown Boolop tag");
-            }
-        } else {
-            switch(tag) {
-                case Tag::OP_EQ:
-                    return expr1.IdValue.fval == expr2.IdValue.fval;
-                case Tag::OP_LT:
-                    return expr1.IdValue.fval < expr2.IdValue.fval;
-                case Tag::OP_GT:
-                    return expr1.IdValue.fval > expr2.IdValue.fval;
-                case Tag::OP_LE:
-                    return expr1.IdValue.fval <= expr2.IdValue.fval;
-                case Tag::OP_GE:
-                    return expr1.IdValue.fval >= expr2.IdValue.fval;
-                default:
-                    throw std::runtime_error("unknown Boolop tag");
-            }
+        switch (tag) {
+            case Tag::OP_EQ:
+                return expr1.IdValue.ival == expr2.IdValue.ival;
+            case Tag::OP_LT:
+                return expr1.IdValue.ival < expr2.IdValue.ival;
+            case Tag::OP_GT:
+                return expr1.IdValue.ival > expr2.IdValue.ival;
+            case Tag::OP_LE:
+                return expr1.IdValue.ival <= expr2.IdValue.ival;
+            case Tag::OP_GE:
+                return expr1.IdValue.ival >= expr2.IdValue.ival;
+            default:
+                throw std::runtime_error("unknown Boolop tag");
         }
     }
 

@@ -2,12 +2,12 @@
 
 #include "Token.hpp"
 #include "Tag.hpp"
-
+#include <iostream>
 class Word : public Token {
 public:
-    std::string lexeme = "";
+    std::string lexeme;
 
-    Word() : Token(0), lexeme("") {} 
+    Word() : Token(0) {} 
     Word(const std::string& s, int tag) : Token(tag), lexeme(s) {}
     Word(const Word& w);
 
@@ -43,4 +43,8 @@ bool operator!=(const Word& w1, const Word& w2) {
     return !(w1 == w2);
 }
 
-Word::Word(const Word& w) : Token(w.tag), lexeme(w.lexeme) {}
+Word::Word(const Word& w) : Token(w.tag), lexeme(w.lexeme) {
+    // std::cout << "Word copy constructor called" << std::endl;
+    // std::cout << "w.lexeme: " << w.lexeme << std::endl;
+    // std::cout << "w.tag: " << w.tag << std::endl;
+}

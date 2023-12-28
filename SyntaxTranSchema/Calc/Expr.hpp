@@ -33,6 +33,17 @@ public:
         }
     }
 
+    Expr operator = (const Expr& expr) {
+        this->op = expr.op;
+        this->type = expr.type;
+        if (expr.type == Type::Int) {
+            this->IdValue.ival = expr.IdValue.ival;
+        } else {
+            this->IdValue.fval = expr.IdValue.fval;
+        }
+        return *this;
+    }
+
 
     std::string toString() {
         return op.toString();

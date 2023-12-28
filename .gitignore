@@ -28,7 +28,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 
 #python cache
@@ -39,3 +38,17 @@ hide-digit*
 *.yy.c
 
 table.out
+
+foo
+
+bar
+
+tmp
+
+_[0-9]*.out
+
+a.out
+
+*.jpg*
+
+*.log

@@ -16,7 +16,7 @@ private:
     Word look;
     Env* top = nullptr;
     int used = 0;
-    bool isExecuting = false;
+    bool isExecuting = true;
 
     void move() {
         look = lexer.consumeToken();
@@ -196,13 +196,23 @@ void Parser::assgnstmt() {
             auto [line, column] = lexer.GetLineAndColumn();
             lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
         }
+
+        std::cout << "before update: " << idPtr->toString() << std::endl;
+        if (idPtr->type != expr.type) {
+            if (expr.type == Type::Int) {
+                expr.IdValue.fval = static_cast<float>(expr.IdValue.ival);
+                expr.type = Type::Real;
+            } else {
+                expr.IdValue.ival = static_cast<int> (expr.IdValue.fval);
+                expr.type = Type::Int;
+            }
+        }
         idPtr->IdValue = expr.IdValue;
 
-        std::cout << "update: " << idPtr->toString() << std::endl;
         if (idPtr->type == Type::Int) {
-            std::cout << "value: " << idPtr->IdValue.ival << std::endl;
+            std::cout << "update value: " << idPtr->IdValue.ival << std::endl;
         } else {
-            std::cout << "value: " << idPtr->IdValue.fval << std::endl;
+            std::cout << "update value: " << idPtr->IdValue.fval << std::endl;
         }
     }
 }
@@ -211,12 +221,14 @@ bool Parser::boolexpr() {
 
     Expr leftExpr = arithexpr();
     Boolop op = boolop();
+    std::cout << "op: " << op.toString() << std::endl;
     Expr rightExpr = arithexpr();
 
     return op.yield(leftExpr, rightExpr);
 }
 
 Boolop Parser::boolop() {
+    Boolop op = Boolop(look.tag);
     if (look.tag == Tag::OP_EQ) {
         match(Tag::OP_EQ);
     } else if (look.tag == Tag::OP_LT) {
@@ -231,78 +243,101 @@ Boolop Parser::boolop() {
         auto [line, column] = lexer.GetLineAndColumn();
         lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
     }
+    return op;
 }
 Expr Parser::arithexpr() {
     Expr expr = multexpr();
     ExprPrime exprPrime = arithexprprime();
+    std::cout << "expr1: " << expr.type.toString() << " exprPrime1: " << exprPrime.type.toString() << std::endl;
     yield(expr, exprPrime);
     return expr;
 }
 ExprPrime Parser::arithexprprime() {
 
-    ExprPrime exprPrime;
+    ExprPrime res;
 
     if (look.tag == Tag::OP_PLUS) {
         match(Tag::OP_PLUS);
         Expr expr = multexpr();
-        ExprPrime exprPrime = arithexprprime();
+        ExprPrime exprPrime = arithexprprime();  
         yield(expr, exprPrime);
-        exprPrime = ExprPrime(expr, Tag::OP_PLUS);
+        res = ExprPrime(expr, Tag::OP_PLUS);
+        std::cout << "?\n";
+        std::cout << "exprPrime.type: " << expr.type.toString() << std::endl;
+        assert(res.type != Type::Undef);
     } else if (look.tag == Tag::OP_MINUS) {
         match(Tag::OP_MINUS);
         Expr expr = multexpr();
         ExprPrime exprPrime = arithexprprime();
         yield(expr, exprPrime);
-        exprPrime = ExprPrime(expr, Tag::OP_MINUS);
+        res = ExprPrime(expr, Tag::OP_MINUS);
+        assert(res.type != Type::Undef);
     } else {
         // epsilon
-        exprPrime = ExprPrime();
+        res = ExprPrime();
     }
-
-    return exprPrime;
+    std::cout << "exprPrime.ival: " << res.IdValue.ival << std::endl;
+    return res;
 }
 
 Expr Parser::multexpr() {
-    simpleexpr();
-    multexprprime();
+    Expr expr = simpleexpr();
+    ExprPrime exprPrime = multexprprime();
+    // output the type of expr and exprPrime
+    std::cout << "expr2: " << expr.type.toString() << " exprPrime2: " << exprPrime.type.toString() << std::endl;
+    yield(expr, exprPrime);
+    return expr;
 }
 
 ExprPrime Parser::multexprprime() {
 
-    ExprPrime exprPrime;
+    ExprPrime res;
 
     if (look.tag == Tag::OP_TIMES) {
         match(Tag::OP_TIMES);
         Expr expr =  simpleexpr();
         ExprPrime exprPrime = multexprprime();
         yield(expr, exprPrime);
-        exprPrime = ExprPrime(expr, Tag::OP_TIMES);
+        res = ExprPrime(expr, Tag::OP_TIMES);
+        assert(res.type != Type::Undef);
     } else if (look.tag == Tag::OP_DIVIDE) {
         match(Tag::OP_DIVIDE);
         Expr expr = simpleexpr();
         ExprPrime exprPrime = multexprprime();
         yield(expr, exprPrime);
-        exprPrime = ExprPrime(expr, Tag::OP_DIVIDE);
+        res = ExprPrime(expr, Tag::OP_DIVIDE);
+
+        assert(res.type != Type::Undef);
     } else {
         // epsilon
-        exprPrime = ExprPrime();
+        res = ExprPrime();
     }
-
-    return exprPrime;
+    
+    return res;
 }
 
 Expr Parser::simpleexpr() {
     Word old = look;
     if (look.tag == Tag::ID) {
+        // output red color
+        std::cout << "\033[1;31m" << "ID" << "\033[0m" << std::endl;
         match(Tag::ID);
-        return Id(old, Type::Int, 0, 0);
+        Id* idPtr = top->get(old);
+        assert(idPtr != nullptr);
+        if (idPtr->type == Type::Int) 
+            return Expr(old, idPtr->type, idPtr->IdValue.ival);
+        else 
+            return Expr(old, idPtr->type, idPtr->IdValue.fval);
     } else if (look.tag == Tag::NUM) {
+        std::cout << "\033[1;31m" << "NUM" << "\033[0m" << std::endl;
         match(Tag::NUM);
-        return Expr(old, Type::Int, 0);
+        return Expr(old, Type::Int, std::stoi(old.lexeme));
     } else if (look.tag == Tag::REAL) {
+        std::cout << "\033[1;31m" << "REAL" << "\033[0m" << std::endl;
         match(Tag::REAL);
-        return Expr(old, Type::Real, 0.0f);
+        return Expr(old, Type::Real, std::stof(old.lexeme));
     } else if (look.tag == Tag::LPAREN) {
+        std::cout << "\033[1;31m" << "(VAL)" << "\033[0m" << std::endl;
         match(Tag::LPAREN);
         Expr eval = arithexpr();
         match(Tag::RPAREN);

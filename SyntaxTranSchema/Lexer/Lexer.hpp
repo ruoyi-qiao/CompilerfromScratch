@@ -134,7 +134,7 @@ const int Lexer::lexemeToTag(const std::string& lexeme) {
     // std::cout << "lexeme: " << lexeme << std::endl;
     if (lexeme == "int") {
         return Tag::KW_INT;
-    } else if (lexeme == "float") {
+    } else if (lexeme == "real") {
         return Tag::KW_REAL;
     } else if (lexeme == "if") {
         return Tag::KW_IF;

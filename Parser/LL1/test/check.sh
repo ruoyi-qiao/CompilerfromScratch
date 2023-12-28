@@ -1,9 +1,3 @@
-# write a script to check the correctness of your parser
-# read from [%d].in and write to [%d].out
-# then compare [%d].out with _[%d].out
-# if they are the same, print "Test [%d] passed"
-# otherwise, print "Test [%d] failed"
-
 g++ -std=c++11 -o ll1Parser ll1Parser.cpp
 
 cd test

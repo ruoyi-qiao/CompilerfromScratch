@@ -10,10 +10,15 @@ public:
 
     static Type Int;
     static Type Real;
+    static Type Undef;
 
+    std::string toString() const {
+        return lexeme;
+    }
 };
 
 // Initialization of static members
 Type Type::Int("int", Tag::KW_INT, 4);
 Type Type::Real("real", Tag::KW_REAL, 8);
+Type Type::Undef("undef", Tag::KW_UNDEF, 0);
     
