@@ -65,15 +65,15 @@ public:
     Parser(Lexer& l) : lexer(l),  look(lexer.consumeToken()) {
     }
 
-    void program() {
+    std::map<Word, Id> program(int &status) {
         // top level env
         top = new Env(top);
 
         decls();
         compoundStmt();
 
-        if (!error_flag)
-            top->print();
+        status = error_flag ? 1 : 0;
+        return top->getEnv();
     }
 };
 
@@ -363,4 +363,6 @@ Expr Parser::simpleexpr() {
         int column = lexer.GetLineAndColumn().second;
         lexer.reportError("syntax error on line " + std::to_string(line) + " column " + std::to_string(column));
     }
+    lexer.reportError("simpleexpr error");
+    return Expr();
 }

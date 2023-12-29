@@ -25,6 +25,14 @@ public:
         }
         return nullptr;
     }
+    
+    std::map<Word, Id> getEnv() {
+        std::map<Word, Id> res;
+        for (auto& it : table) {
+            res[it.first] = it.second;
+        }
+        return res;
+    }
 
     void print() {
         for (auto& it : table) {

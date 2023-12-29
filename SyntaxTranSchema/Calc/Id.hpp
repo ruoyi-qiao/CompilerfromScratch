@@ -17,7 +17,9 @@ public:
             return this->op.toString() + "[" + std::to_string(this->offset) + "] = " + std::to_string(IdValue.ival);
         } else if (type == Type::Real) {
             return this->op.toString() + "[" + std::to_string(this->offset) + "] = " + std::to_string(IdValue.fval);
-        }
+        } 
+
+        return this->op.toString() + "[" + std::to_string(this->offset) + "] = " + std::to_string(IdValue.ival);
 
     }
 };

@@ -185,7 +185,7 @@ const int Lexer::lexemeToTag(const std::string& lexeme) {
     } else {
         reportError("Unknown lexeme: " + lexeme);
     }
-
+    return -1;
 }
 
 void Lexer::printWords() {

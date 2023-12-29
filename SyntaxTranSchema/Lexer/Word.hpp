@@ -17,6 +17,10 @@ public:
         return *this;
     }
 
+    bool operator<(const Word& w) const {
+        return lexeme < w.lexeme;
+    }
+
     std::string toString() const {
         return lexeme;
     }
