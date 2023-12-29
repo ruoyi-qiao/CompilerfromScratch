@@ -60,22 +60,6 @@ private:
     ExprPrime multexprprime();
     Expr simpleexpr();
 
-    // Stmt* block();
-    // void decls();
-    // Type* type();
-    // Type* dims(Type* p);
-    // Stmt* stmts();
-    // Stmt* stmt();
-    // Stmt* assign();
-    // Expr* bool_();
-    // Expr* join();
-    // Expr* equality();
-    // Expr* rel();
-    // Expr* expr();
-    // Expr* term();
-    // Expr* unary();
-    // Expr* factor();
-    // Access* offset(Id* a);
 
 public:
     Parser(Lexer& l) : lexer(l),  look(lexer.consumeToken()) {

@@ -150,6 +150,10 @@ const int Lexer::lexemeToTag(const std::string& lexeme) {
         return Tag::OP_LT;
     } else if (lexeme == ">") {
         return Tag::OP_GT;
+    } else if (lexeme == ">=") {
+        return Tag::OP_GE;
+    } else if (lexeme == "<=") {
+        return Tag::OP_LE;  
     } else if (lexeme == "+") {
         return Tag::OP_PLUS;
     } else if (lexeme == "-") {

@@ -85,3 +85,81 @@ if ( a < b ) then c = c / 0 ; else c = c / 4 ;
 }
 error message:line 1,realnum can not be translated into int type
 error message:line 5,division by zero
+
+int a = 10 ;  
+real b = 2.5 ; 
+int c = 7 ; 
+int d = 0 ;
+{
+if ( a < c ) then 
+{
+    b = b * c ;
+    c = c - a ; 
+
+    if ( b > 5.0 ) then 
+    {
+        a = a + 5 ; 
+    }
+    else
+    {
+        a = a - 5 ; 
+    }
+}
+else
+{
+    a = a + 1 ; 
+    c = c + 2 ; 
+
+    if ( c > 10 ) then 
+    {
+        b = b + 2.0 ; 
+    }
+    else
+    {
+        b = b - 2.0 ; 
+    }
+}
+    d = a + ( c * b - a ) * c ;
+
+}
+
+int a = 10 ;  
+int b = 4 ; 
+real c = 7 ; 
+int ddaf = 0 ;
+{
+
+a = a - b * 2 ;
+
+if ( a < c ) then 
+{
+    b = b * c ;
+    c = c - a ; 
+
+    if ( b > 5 ) then 
+    {
+        a = a + 5 ; 
+        ddaf = ddaf + a + ( c * b - a ) * c ;
+    }
+    else
+    {
+        a = a - 5 ; 
+    }
+}
+else
+{
+    a = a + 1 ; 
+    c = c + 2 ; 
+
+    if ( c > 10 ) then 
+    {
+        b = b + 2.0 ; 
+    }
+    else
+    {
+        b = b - 2.0 ; 
+    }
+}
+    
+
+}
