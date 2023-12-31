@@ -3,6 +3,7 @@ from LR0_items import *
 from bnf import *
 from sets import *
 from LR1_items import *
+import argparse
 
 def CStyleTable(tableName: str, table: dict, mapping : dict, isAction: bool) -> str:
     howToMap = [terminal for terminal, _ in groupby(sorted(table.keys(), key=lambda x: x[1]), lambda x: x[1])]
@@ -63,19 +64,33 @@ def CppStyleVector(vector : list, valueType : str, name : str):
     return ''.join(output)
 
 if __name__ == '__main__':
-    nts = ParseBNF('../LR1/rules.txt').Build()
+
+    # -t: table and map for LR1 parser
+    # -g: graph for visualization
+    
+    parser = argparse.ArgumentParser(description='Generate LR1 table and graph')
+    parser.add_argument('-t', '--table', action='store_true', help='generate LR1 table')
+    parser.add_argument('-g', '--graph', action='store_true', help='generate LR1 graph')
+    args = parser.parse_args()
+
+
+    nts = ParseBNF('rules.txt').Build()
     augmentedSymbol = '<program\'>'
 
     init = LRState()
     init += Item1('<program\'>', ['<program>',], 0, 'eof')
     C, transition = GetStates(init, nts, '<program>', closureLR1)
 
-    ########################################
-    for state in C:
-        print(state)
-    for (key, value) in transition.items():
-        print(key, ':', value, sep=' ')
-    ########################################
+
+
+    ############################################
+    if args.graph:
+        for state in C:
+            print(state)
+        for (key, value) in transition.items():
+            print(key, ':', value, sep=' ')
+    ############################################
+            
         
     actionTable = dict()
     gotoTable = dict()
@@ -100,15 +115,15 @@ if __name__ == '__main__':
             if key in transition.keys():  
                 gotoTable[key] = transition[key]
 
-    print('ACTION TABLE:')
-    for key, value in actionTable.items():
-        print(key, ': ', sep=' ', end = '')
-        if isinstance(value, Item1):
-            print('reduce ' + str(value))
-        elif value == 'Accept!':
-            print(value)
-        else:
-            print("shift ", value, sep = ' ')
+    # print('ACTION TABLE:')
+    # for key, value in actionTable.items():
+    #     print(key, ': ', sep=' ', end = '')
+    #     if isinstance(value, Item1):
+    #         print('reduce ' + str(value))
+    #     elif value == 'Accept!':
+    #         print(value)
+    #     else:
+    #         print("shift ", value, sep = ' ')
             
     # print('----------------------------------')
     # print('GOTO TABLE')
@@ -117,27 +132,18 @@ if __name__ == '__main__':
 
 
     # print()
-
-    # print(CStyleTable('LR1ActionTable', actionTable, True))
-    # print(CStyleTable('LR1GotoTable', gotoTable, False))
     
     nonTerminal2Index = dict()
     Index2NonTerminal = dict()
     terminal2Index = dict()
     Index2NonTerminal = dict()
 
-    print(CStyleTable('LR1ActionTable', actionTable, terminal2Index, True))
-    print(CStyleTable('LR1GotoTable', gotoTable, nonTerminal2Index, False))
 
     Index2NonTerminal = {v: k for k, v in nonTerminal2Index.items()}
     Index2Terminal = {v: k for k, v in terminal2Index.items()}
 
     nonTerminal2Index = {'\"' +  k.strip('<>') + '\"': v for k, v in nonTerminal2Index.items()}
 
-    print(CppStyleMap(Index2NonTerminal, 'int', 'std::string', 'Index2NonTerminal'))
-    print(CppStyleMap(Index2Terminal, 'int', 'std::string', 'Index2Terminal'))
-    print(CppStyleMap(nonTerminal2Index, 'std::string', 'int', 'NonTerminal2Index'))
-    print(CppStyleMap(terminal2Index, 'std::string', 'int', 'Terminal2Index'))
 
     prodcutionCount = 0
     productionLength = list()
@@ -158,5 +164,15 @@ if __name__ == '__main__':
     # print(productionLength)
     # print(prodcutionName)
 
-    print(CppStyleVector(productionLength, 'int', 'productionLength'))
-    print(CppStyleVector(prodcutionName, 'std::string', 'productionName'))
+    if args.table:
+
+        print(CStyleTable('LR1ActionTable', actionTable, terminal2Index, True))
+        print(CStyleTable('LR1GotoTable', gotoTable, nonTerminal2Index, False))
+
+        print(CppStyleMap(Index2NonTerminal, 'int', 'std::string', 'Index2NonTerminal'))
+        print(CppStyleMap(Index2Terminal, 'int', 'std::string', 'Index2Terminal'))
+        print(CppStyleMap(nonTerminal2Index, 'std::string', 'int', 'NonTerminal2Index'))
+        print(CppStyleMap(terminal2Index, 'std::string', 'int', 'Terminal2Index'))
+
+        print(CppStyleVector(productionLength, 'int', 'productionLength'))
+        print(CppStyleVector(prodcutionName, 'std::string', 'productionName'))
