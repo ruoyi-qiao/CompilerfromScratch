@@ -1164,8 +1164,8 @@ public:
         currentState_ = 0;
         currentTokenStart_ = 0;
 
-        // output table for debug out.txt
-        // std::ofstream out("out.txt");
+        // output table for debug DFAStateTransitionTable.csv
+        // std::ofstream out("DFAStateTransitionTable.csv");
         // out << std::setw(4) << " ";
         // for (int i = 0; i <= 128; i++) {
         //     out << std::setw(4) << i;
